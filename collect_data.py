@@ -8,21 +8,26 @@ from getkeys import key_check
 import os
 
 
+w =  [1,0,0]
+wa = [0,1,0]
+wd = [0,0,1]
+
 def keys_to_output(keys):
     '''
     Convert keys to a ...multi-hot... array
-
-    [A,W,D] boolean values.
+     0  1  2  3  4   5   6   
+    [W, S, A, D, WA, WD, NOKEY] boolean values. 
     '''
     output = [0,0,0]
-    
-    if 'A' in keys:
-        output[0] = 1
-    elif 'D' in keys:
-        output[2] = 1
-    else:
-        output[1] = 1
+
+    if 'W' in keys and 'A' in keys:
+        output = wa
+    elif 'W' in keys and 'D' in keys:
+        output = wd
+    elif 'W' in keys:
+        output = w
     return output
+
 
 file_name = 'training_data.npy'
 
@@ -55,9 +60,14 @@ def main():
             output = keys_to_output(keys)
             training_data.append([screen,output])
             
-            if len(training_data) % 500 == 0:
+            if len(training_data) % 100 == 0:
                 print(len(training_data))
-                np.save(file_name, training_data, allow_pickle=True)
+                
+                if len(training_data) == 500:
+                    np.save(file_name, training_data, allow_pickle=True)
+                    for i in range(25):
+                        print('DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                    break
 
         keys = key_check()
         if 'T' in keys:
