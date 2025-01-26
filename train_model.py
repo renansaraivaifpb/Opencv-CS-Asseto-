@@ -3,8 +3,8 @@
 import numpy as np
 from alexnet import alexnet
 
-WIDTH = 160
-HEIGHT = 120
+WIDTH = 600
+HEIGHT = 500
 LR = 1e-3
 EPOCHS = 10
 MODEL_NAME = 'pygta5-car-fast-{}-{}-{}-epochs-300K-data.model'.format(LR, 'alexnetv2',EPOCHS)
@@ -31,4 +31,4 @@ model.fit({'input': X}, {'targets': Y}, n_epoch=1, validation_set=({'input': tes
 
 model.save(MODEL_NAME)
 
-# tensorboard --logdir=foo:C:/path/log
+# tensorboard --logdir=foo:C:/Users/Singularity/Documents/Car/log
