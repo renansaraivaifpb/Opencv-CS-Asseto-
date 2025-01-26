@@ -8,17 +8,20 @@ from getkeys import key_check
 import os
 
 
-w =  [1,0,0]
-wa = [0,1,0]
-wd = [0,0,1]
+w =  [1,0,0,0,0,0]
+wa = [0,1,0,0,0,0]
+wd = [0,0,1,0,0,0]
+a_key =  [0,0,0,1,0,0]
+d_key =  [0,0,0,0,1,0]
+s_key =  [0,0,0,0,0,1]
 
 def keys_to_output(keys):
     '''
     Convert keys to a ...multi-hot... array
      0  1  2  3  4   5   6   
-    [W, S, A, D, WA, WD, NOKEY] boolean values. 
+    [W, A, S, D, WA, WD, NOKEY] boolean values. 
     '''
-    output = [0,0,0]
+    output = [0, 0, 0]
 
     if 'W' in keys and 'A' in keys:
         output = wa
@@ -26,8 +29,13 @@ def keys_to_output(keys):
         output = wd
     elif 'W' in keys:
         output = w
+    elif 'A' in keys:  # key 'A'
+        output = a_key
+    elif 'D' in keys:  # key 'D'
+        output = d_key
+    elif 'S' in keys:  # key 'S'
+        output = s_key  
     return output
-
 
 file_name = 'training_data.npy'
 
@@ -54,16 +62,16 @@ def main():
             screen = grab_screen(region=(0,40,800,600))
             last_time = time.time()
             screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-            screen = cv2.resize(screen, (160,120))
+            screen = cv2.resize(screen, (600,500))
             # resize to something a bit more acceptable for a CNN
             keys = key_check()
             output = keys_to_output(keys)
             training_data.append([screen,output])
             
-            if len(training_data) % 100 == 0:
+            if len(training_data) % 500 == 0:
                 print(len(training_data))
                 
-                if len(training_data) == 500:
+                if len(training_data) == 5000:
                     np.save(file_name, training_data, allow_pickle=True)
                     for i in range(25):
                         print('DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
