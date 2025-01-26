@@ -11,9 +11,13 @@ df = pd.DataFrame(train_data)
 print(df.head())
 print(Counter(df[1].apply(str)))
 
-lefts = []
+# Atualizando para reconhecer a classe 'A' (caso [0, 0, 1])
+wa = []
 rights = []
-forwards = []
+w = []
+a_key = []  # Lista para a nova classe 'A'
+d_key = []
+s_key = []
 
 shuffle(train_data)
 
@@ -21,29 +25,42 @@ shuffle(train_data)
 for data in train_data:
     img = data[0]
     choice = data[1]
-
-    if choice == [1, 0, 0]:
-        lefts.append([img, choice])
-    elif choice == [0, 1, 0]:
-        forwards.append([img, choice])
-    elif choice == [0, 0, 1]:
+    # wa
+    if choice == [0,1,0,0,0,0]:
+        wa.append([img, choice])
+    # w
+    elif choice == [1,0,0,0,0,0]:
+        w.append([img, choice])
+    # a
+    elif choice == [0,0,0,1,0,0]:
+        a_key.append([img, choice])  # Adicionando à nova lista para 'A'
+    # wd
+    elif choice == [0,0,1,0,0,0]:
         rights.append([img, choice])
+    # d
+    elif choice == [0,0,0,0,1,0]:
+        d_key.append([img, choice])
+    # s
+    elif choice == [0,0,0,0,0,1]:
+        s_key.append([img, choice])
     else:
         print('no matches')
 
 # Encontrando o número mínimo de amostras entre as classes
-min_len = min(len(lefts), len(rights), len(forwards))
+min_len = min(len(wa), len(rights), len(w), len(a_key), len(d_key), len(s_key))
 
 # Balanceando as classes para terem o mesmo número de amostras
-forwards = forwards[:min_len]
-lefts = lefts[:min_len]
+w = w[:min_len]
+wa = wa[:min_len]
 rights = rights[:min_len]
+a_key = a_key[:min_len]  # Balanceando também a nova classe
+d_key = d_key[:min_len]
+s_key = s_key[:min_len]
 
+print(len(w), len(wa), len(rights), len(a_key), len(d_key), len(s_key))
 
-print(len(forwards), len(lefts), len(rights))
-
-# Unindo as classes balanceada
-final_data = forwards + lefts + rights
+# Unindo as classes balanceadas
+final_data = w + wa + rights + a_key + d_key + s_key# Incluindo 'A' na unificação
 
 # Embaralhando o conjunto de dados final
 shuffle(final_data)
